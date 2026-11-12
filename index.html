@@ -1,0 +1,668 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#087f8c">
+<title>Sanora — медицинский портал Казахстана</title>
+
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+
+<style>
+:root {
+  --primary:#087f8c;
+  --dark:#07545c;
+  --bg:#f2f8f9;
+  --white:#fff;
+  --text:#18343a;
+  --muted:#71868b;
+  --border:#dce9eb;
+  --danger:#d94848;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+header{
+  background:linear-gradient(120deg,#07545c,#0b9e9c);
+  color:white;
+  padding:22px 5%;
+}
+.header-inner{
+  max-width:1200px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:15px;
+}
+.logo{font-size:29px;font-weight:800;letter-spacing:1px}
+.logo span{color:#a5f2df}
+nav{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+nav button{
+  background:transparent;
+  color:white;
+  border:1px solid #ffffff55;
+  padding:10px 14px;
+  border-radius:10px;
+  cursor:pointer;
+}
+nav button:hover{background:#ffffff22}
+.container{max-width:1200px;margin:auto;padding:25px 16px}
+.hero{
+  background:white;
+  padding:30px;
+  border-radius:20px;
+  margin-bottom:22px;
+  box-shadow:0 5px 22px #18343a0a;
+}
+.hero h1{margin-top:0;font-size:32px}
+.hero p{color:var(--muted);line-height:1.6}
+.search{
+  width:100%;
+  padding:15px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  font-size:16px;
+  outline-color:var(--primary);
+}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}
+select,input{
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:white;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:16px;
+}
+.card,.panel{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:19px;
+  box-shadow:0 4px 16px #18343a08;
+}
+.card h3{margin:8px 0}
+.card p{color:var(--muted);font-size:14px;line-height:1.5}
+.tag{
+  display:inline-block;
+  background:#e5f6f3;
+  color:#087f75;
+  border-radius:20px;
+  padding:6px 10px;
+  font-size:12px;
+}
+.btn{
+  display:inline-block;
+  background:var(--primary);
+  color:white;
+  border:0;
+  padding:12px 16px;
+  border-radius:10px;
+  cursor:pointer;
+  text-decoration:none;
+  margin:4px 3px 4px 0;
+}
+.btn:hover{background:var(--dark)}
+.btn.secondary{background:#e8f1f2;color:var(--dark)}
+.btn.danger{background:var(--danger)}
+.section{display:none}
+.section.active{display:block}
+.section-title{margin:0 0 18px}
+#map{
+  width:100%;
+  height:440px;
+  border:0;
+  border-radius:15px;
+}
+.call-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:15px;
+}
+video{
+  background:#102b30;
+  width:100%;
+  border-radius:12px;
+  min-height:170px;
+  object-fit:cover;
+}
+.status{
+  padding:12px;
+  border-radius:10px;
+  background:#e8f5f4;
+  margin:12px 0;
+  color:#07545c;
+  overflow-wrap:anywhere;
+}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:12px;
+  margin:20px 0;
+}
+.stat{
+  background:white;
+  padding:18px;
+  border-radius:14px;
+  border:1px solid var(--border);
+}
+.stat strong{font-size:26px;color:var(--primary);display:block}
+footer{
+  text-align:center;
+  padding:25px;
+  color:var(--muted);
+}
+.hidden{display:none!important}
+.small{font-size:13px;color:var(--muted)}
+@media(max-width:600px){
+  .hero h1{font-size:25px}
+  .container{padding:15px 12px}
+  header{padding:18px 15px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">SAN<span>ORA</span></div>
+    <nav>
+      <button onclick="showSection('home')">Главная</button>
+      <button onclick="showSection('clinics')">Клиники</button>
+      <button onclick="showSection('mapSection')">Карта</button>
+      <button onclick="showSection('calls')">Звонки</button>
+      <button onclick="showSection('about')">О проекте</button>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+<section id="home" class="section active">
+  <div class="hero">
+    <span class="tag">МЕДИЦИНСКИЙ ПОРТАЛ КАЗАХСТАНА</span>
+    <h1>Здоровье начинается с Sanora</h1>
+    <p>
+      Поиск медицинских организаций, просмотр контактной информации,
+      карта учреждений и связь между пользователями.
+    </p>
+    <button class="btn" onclick="showSection('clinics')">Найти клинику</button>
+    <button class="btn secondary" onclick="showSection('calls')">Перейти к звонкам</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><strong id="clinicCount">0</strong>Организаций в каталоге</div>
+    <div class="stat"><strong>24/7</strong>Доступ к порталу</div>
+    <div class="stat"><strong>2</strong>Типа звонков</div>
+  </div>
+
+  <h2>Возможности Sanora</h2>
+  <div class="grid">
+    <div class="card"><h3>🏥 Каталог</h3><p>Поиск медицинских организаций по названию, городу и специализации.</p></div>
+    <div class="card"><h3>🗺️ Карта</h3><p>Просмотр расположения медицинских учреждений.</p></div>
+    <div class="card"><h3>📞 Звонки</h3><p>Аудио- и видеосвязь между пользователями.</p></div>
+    <div class="card"><h3>🔎 Поиск</h3><p>Быстрый поиск нужной организации.</p></div>
+  </div>
+</section>
+
+<section id="clinics" class="section">
+  <h2 class="section-title">Медицинские организации</h2>
+  <input class="search" id="searchInput" placeholder="Название, город или специализация..." oninput="renderClinics()">
+
+  <div class="filters">
+    <select id="cityFilter" onchange="renderClinics()">
+      <option value="">Все города</option>
+      <option>Астана</option>
+      <option>Алматы</option>
+      <option>Шымкент</option>
+      <option>Караганда</option>
+      <option>Кокшетау</option>
+      <option>Актобе</option>
+      <option>Павлодар</option>
+      <option>Тараз</option>
+      <option>Семей</option>
+      <option>Усть-Каменогорск</option>
+      <option>Костанай</option>
+      <option>Атырау</option>
+      <option>Уральск</option>
+      <option>Кызылорда</option>
+      <option>Петропавловск</option>
+      <option>Талдыкорган</option>
+      <option>Туркестан</option>
+    </select>
+    <select id="typeFilter" onchange="renderClinics()">
+      <option value="">Все типы</option>
+      <option>Больница</option>
+      <option>Клиника</option>
+      <option>Диагностический центр</option>
+    </select>
+  </div>
+  <div id="clinicList" class="grid"></div>
+  <p class="small">Контакты и адреса необходимо проверить перед посещением. Каталог является информационным.</p>
+</section>
+
+<section id="mapSection" class="section">
+  <h2 class="section-title">Карта медицинских организаций</h2>
+  <div class="panel">
+    <p>Найди медицинскую организацию на карте.</p>
+    <input id="mapSearch" class="search" placeholder="Например, больницы Кокшетау">
+    <button class="btn" onclick="searchMap()">Найти на карте</button>
+    <iframe id="map" title="Карта OpenStreetMap" src="https://www.openstreetmap.org/export/embed.html?bbox=69.0%2C40.0%2C88.0%2C55.5&layer=mapnik"></iframe>
+    <p class="small">Карта загружается с OpenStreetMap. Для точной навигации используйте поиск.</p>
+  </div>
+</section>
+
+<section id="calls" class="section">
+  <h2 class="section-title">Аудио- и видеозвонки Sanora</h2>
+
+  <div class="panel">
+    <h3>1. Создать комнату</h3>
+    <p>Создай свой ID и отправь его другому участнику.</p>
+    <button class="btn" onclick="createRoom()">Создать комнату</button>
+    <div class="status" id="myId">Комната ещё не создана</div>
+    <button class="btn secondary" onclick="copyId()">Скопировать ID</button>
+  </div>
+
+  <div class="panel" style="margin-top:15px">
+    <h3>2. Подключиться к другому участнику</h3>
+    <input id="remoteId" class="search" placeholder="Вставь ID собеседника">
+    <button class="btn" onclick="startCall(true)">Видеозвонок</button>
+    <button class="btn" onclick="startCall(false)">Аудиозвонок</button>
+    <button class="btn danger" onclick="endCall()">Завершить звонок</button>
+    <div id="callStatus" class="status">Ожидание подключения</div>
+  </div>
+
+  <div class="call-grid" style="margin-top:15px">
+    <div class="panel">
+      <h3>Моя камера</h3>
+      <video id="localVideo" autoplay playsinline muted></video>
+    </div>
+    <div class="panel">
+      <h3>Собеседник</h3>
+      <video id="remoteVideo" autoplay playsinline></video>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:15px">
+    <button class="btn secondary" onclick="toggleMic()">🎙️ Микрофон</button>
+    <button class="btn secondary" onclick="toggleCamera()">📷 Камера</button>
+    <p class="small">
+      Для звонков оба участника должны открыть Sanora, создать ID,
+      разрешить микрофон и камеру и использовать HTTPS.
+    </p>
+  </div>
+</section>
+
+<section id="about" class="section">
+  <div class="panel">
+    <h2>О Sanora</h2>
+    <p>
+      Sanora — информационный проект для поиска медицинских организаций
+      Казахстана и общения пользователей.
+    </p>
+    <h3>Важная информация</h3>
+    <p>
+      Sanora не является медицинской организацией и не заменяет
+      консультацию врача. При экстренной ситуации в Казахстане
+      обращайтесь по номеру 103 или 112.
+    </p>
+    <p>
+      Система звонков в этой версии использует PeerJS. Передавать
+      медицинские документы и конфиденциальные данные через
+      демонстрационную систему не рекомендуется.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  © 2026 Sanora — медицинский портал Казахстана
+</footer>
+
+<script>
+const clinics = [
+  {name:"Национальный научный медицинский центр",city:"Астана",type:"Больница",spec:"Многопрофильная медицина"},
+  {name:"Городская многопрофильная больница №1",city:"Астана",type:"Больница",spec:"Стационарная помощь"},
+  {name:"Городская больница №2",city:"Астана",type:"Больница",spec:"Многопрофильная медицина"},
+  {name:"Национальный центр детской реабилитации",city:"Астана",type:"Клиника",spec:"Детская реабилитация"},
+  {name:"Национальный научный кардиохирургический центр",city:"Астана",type:"Клиника",spec:"Кардиология"},
+  {name:"Городская поликлиника №1",city:"Астана",type:"Клиника",spec:"Первичная помощь"},
+  {name:"Городская поликлиника №2",city:"Астана",type:"Клиника",spec:"Первичная помощь"},
+  {name:"Центральная городская клиническая больница",city:"Алматы",type:"Больница",spec:"Многопрофильная медицина"},
+  {name:"Городская клиническая больница №4",city:"Алматы",type:"Больница",spec:"Стационарная помощь"},
+  {name:"Городская клиническая больница №5",city:"Алматы",type:"Больница",spec:"Многопрофильная медицина"},
+  {name:"Городская клиническая больница №7",city:"Алматы",type:"Больница",spec:"Многопрофильная медицина"},
+  {name:"Детская городская клиническая больница",city:"Алматы",type:"Больница",spec:"Педиатрия"},
+  {name:"Городская поликлиника №1",city:"Алматы",type:"Клиника",spec:"Первичная помощь"},
+  {name:"Городская поликлиника №5",city:"Алматы",type:"Клиника",spec:"Первичная помощь"},
+  {name:"Городская поликлиника №12",city:"Алматы",type:"Клиника",spec:"Первичная помощь"},
+  {name:"Городская больница скорой медицинской помощи",city:"Шымкент",type:"Больница",spec:"Экстренная помощь"},
+  {name:"Городская больница №1",city:"Шымкент",type:"Больница",spec:"Многопрофильная медицина"},
+  {name:"Городская поликлиника №1",city:"Шымкент",type:"Клиника",spec:"Первичная помощь"},
+  {name:"Городская поликлиника №2",city:"Шымкент",type:"Клиника",spec:"Первичная помощь"},
+  {name:"Областная клиническая больница",city:"Караганда",type:"Больница",spec:"Многопрофильная медицина"},
+  {name:"Многопрофильная больница №1",city:"Караганда",type:"Больница",spec:"Стационарная помощь"},
+  {name:"Городская поликлиника №1",city:"Караганда",type:"Клиника",spec:"Первичная помощь"},
+  {name:"Многопрофильная областная больница",city:"Кокшетау",type:"Больница",spec:"Многопрофильная медицина"},
+  {name:"Городская поликлиника",city:"Кокшетау",type:"Клиника",spec:"Первичная помощь"},
+  {name:"Областная клиническая больница",city:"Актобе",type:"Больница",spec:"Многопрофильная медицина"},
+  {name:"Городская поликлиника №1",city:"Актобе",type:"Клиника",spec:"Первичная помощь"},
+  {name:"Павлодарская областная больница",city:"Павлодар",type:"Больница",spec:"Многопрофильная медицина"},
+  {name:"Городская поликлиника №1",city:"Павлодар",type:"Клиника",spec:"Первичная помощь"},
+  {name:"Жамбылская областная многопрофильная больница",city:"Тараз",type:"Больница",spec:"Многопрофильная медицина"},
+  {name:"Городская поликлиника №1",city:"Тараз",type:"Клиника",spec:"Первичная помощь"},
+  {name:"Областная больница",city:"Семей",type:"Больница",spec:"Многопрофильная медицина"},
+  {name:"Центр матери и ребёнка",city:"Семей",type:"Клиника",spec:"Материнство и детство"},
+  {name:"Восточно-Казахстанский областной медицинский центр",city:"Усть-Каменогорск",type:"Больница",spec:"Многопрофильная медицина"},
+  {name:"Городская больница №1",city:"Усть-Каменогорск",type:"Больница",spec:"Стационарная помощь"},
+  {name:"Костанайская областная больница",city:"Костанай",type:"Больница",spec:"Многопрофильная медицина"},
+  {name:"Городская поликлиника №1",city:"Костанай",type:"Клиника",spec:"Первичная помощь"},
+  {name:"Атырауская областная больница",city:"Атырау",type:"Больница",spec:"Многопрофильная медицина"},
+  {name:"Городская поликлиника №1",city:"Атырау",type:"Клиника",spec:"Первичная помощь"},
+  {name:"Западно-Казахстанская областная больница",city:"Уральск",type:"Больница",spec:"Многопрофильная медицина"},
+  {name:"Городская поликлиника №1",city:"Уральск",type:"Клиника",spec:"Первичная помощь"},
+  {name:"Кызылординская областная многопрофильная больница",city:"Кызылорда",type:"Больница",spec:"Многопрофильная медицина"},
+  {name:"Городская поликлиника №1",city:"Кызылорда",type:"Клиника",spec:"Первичная помощь"},
+  {name:"Северо-Казахстанская областная больница",city:"Петропавловск",type:"Больница",spec:"Многопрофильная медицина"},
+  {name:"Городская поликлиника №1",city:"Петропавловск",type:"Клиника",spec:"Первичная помощь"},
+  {name:"Областная многопрофильная больница",city:"Талдыкорган",type:"Больница",spec:"Многопрофильная медицина"},
+  {name:"Городская поликлиника №1",city:"Талдыкорган",type:"Клиника",spec:"Первичная помощь"},
+  {name:"Туркестанская областная клиническая больница",city:"Туркестан",type:"Больница",spec:"Многопрофильная медицина"},
+  {name:"Городская поликлиника №1",city:"Туркестан",type:"Клиника",spec:"Первичная помощь"}
+];
+
+document.getElementById("clinicCount").textContent=clinics.length;
+
+function showSection(id){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function renderClinics(){
+  const query=document.getElementById("searchInput").value.toLowerCase().trim();
+  const city=document.getElementById("cityFilter").value;
+  const type=document.getElementById("typeFilter").value;
+
+  const filtered=clinics.filter(c=>
+    (!query || (c.name+" "+c.city+" "+c.spec).toLowerCase().includes(query)) &&
+    (!city || c.city===city) &&
+    (!type || c.type===type)
+  );
+
+  document.getElementById("clinicList").innerHTML=filtered.length
+    ? filtered.map(c=>`
+      <article class="card">
+        <span class="tag">${escapeHTML(c.type)}</span>
+        <h3>${escapeHTML(c.name)}</h3>
+        <p>📍 ${escapeHTML(c.city)}, Казахстан</p>
+        <p>Специализация: ${escapeHTML(c.spec)}</p>
+        <button class="btn secondary" onclick="showMap('${encodeURIComponent(c.name+" "+c.city)}')">На карте</button>
+      </article>`).join("")
+    : "<p>Ничего не найдено. Попробуйте изменить поиск.</p>";
+}
+
+function escapeHTML(s){
+  return String(s).replace(/[&<>"']/g,ch=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[ch]);
+}
+
+function showMap(query){
+  showSection("mapSection");
+  document.getElementById("mapSearch").value=decodeURIComponent(query);
+  searchMap();
+}
+
+function searchMap(){
+  const q=document.getElementById("mapSearch").value.trim();
+  if(!q)return alert("Введите название или адрес.");
+  window.open(
+    "https://www.openstreetmap.org/search?query="+encodeURIComponent(q),
+    "_blank",
+    "noopener"
+  );
+}
+
+renderClinics();
+
+/* PEER-TO-PEER CALLS */
+let peer=null;
+let activeCall=null;
+let localStream=null;
+let myPeerId="";
+let incomingCall=null;
+
+const callStatus=document.getElementById("callStatus");
+const localVideo=document.getElementById("localVideo");
+const remoteVideo=document.getElementById("remoteVideo");
+
+function setCallStatus(message){
+  callStatus.textContent=message;
+}
+
+function createRoom(){
+  if(typeof Peer==="undefined"){
+    setCallStatus("Не удалось загрузить PeerJS. Проверьте интернет.");
+    return;
+  }
+
+  if(peer && !peer.destroyed){
+    setCallStatus("Ваш ID: "+myPeerId);
+    return;
+  }
+
+  setCallStatus("Создаём комнату...");
+
+  peer=new Peer(undefined,{
+    host:"0.peerjs.com",
+    port:443,
+    path:"/",
+    secure:true,
+    config:{
+      iceServers:[
+        {urls:"stun:stun.l.google.com:19302"},
+        {urls:"stun:stun1.l.google.com:19302"}
+      ]
+    }
+  });
+
+  peer.on("open",id=>{
+    myPeerId=id;
+    document.getElementById("myId").textContent="Ваш ID: "+id;
+    setCallStatus("Комната готова. Отправьте ID собеседнику.");
+  });
+
+  peer.on("call",call=>{
+    incomingCall=call;
+    setCallStatus("Входящий звонок от "+call.peer);
+    if(confirm("Вам звонят. Принять звонок?")){
+      answerCall(call);
+    }else{
+      call.close();
+      incomingCall=null;
+      setCallStatus("Звонок отклонён.");
+    }
+  });
+
+  peer.on("error",err=>{
+    setCallStatus("Ошибка соединения: "+err.type);
+  });
+
+  peer.on("disconnected",()=>{
+    setCallStatus("Соединение с сервером сигнализации потеряно.");
+  });
+}
+
+async function getMedia(videoEnabled){
+  if(!navigator.mediaDevices ||
+     !navigator.mediaDevices.getUserMedia){
+    throw new Error("Нужен HTTPS и современный браузер.");
+  }
+
+  try{
+    return await navigator.mediaDevices.getUserMedia({
+      audio:true,
+      video:videoEnabled
+    });
+  }catch(error){
+    if(videoEnabled && error.name!=="NotAllowedError"){
+      setCallStatus("Камера недоступна. Пробуем аудиозвонок...");
+      return await navigator.mediaDevices.getUserMedia({
+        audio:true,
+        video:false
+      });
+    }
+    throw error;
+  }
+}
+
+async function startCall(videoEnabled){
+  if(!peer || peer.destroyed || !peer.open){
+    setCallStatus("Сначала нажмите «Создать комнату».");
+    return;
+  }
+
+  const remoteId=document.getElementById("remoteId").value.trim();
+  if(!remoteId){
+    setCallStatus("Введите ID собеседника.");
+    return;
+  }
+  if(remoteId===myPeerId){
+    setCallStatus("Нельзя позвонить самому себе.");
+    return;
+  }
+
+  try{
+    setCallStatus("Запрашиваем доступ к микрофону и камере...");
+    localStream=await getMedia(videoEnabled);
+    localVideo.srcObject=localStream;
+
+    const call=peer.call(remoteId,localStream);
+    if(!call)throw new Error("Не удалось создать соединение.");
+
+    attachCall(call);
+    setCallStatus("Звоним собеседнику...");
+  }catch(error){
+    handleMediaError(error);
+  }
+}
+
+async function answerCall(call){
+  try{
+    setCallStatus("Подключаем микрофон и камеру...");
+    localStream=await getMedia(true);
+    localVideo.srcObject=localStream;
+    call.answer(localStream);
+    attachCall(call);
+  }catch(error){
+    handleMediaError(error);
+    call.close();
+  }
+}
+
+function attachCall(call){
+  activeCall=call;
+
+  call.on("stream",stream=>{
+    remoteVideo.srcObject=stream;
+    remoteVideo.play().catch(()=>{});
+    setCallStatus("Звонок подключён.");
+  });
+
+  call.on("close",()=>{
+    remoteVideo.srcObject=null;
+    activeCall=null;
+    setCallStatus("Звонок завершён.");
+    stopLocalStream();
+  });
+
+  call.on("error",error=>{
+    setCallStatus("Ошибка звонка: "+error.message);
+  });
+}
+
+function handleMediaError(error){
+  console.error(error);
+  if(error.name==="NotAllowedError" ||
+     error.name==="PermissionDeniedError"){
+    setCallStatus("Доступ запрещён. Разрешите микрофон и камеру для Sanora в настройках Chrome и Android.");
+  }else if(error.name==="NotFoundError"){
+    setCallStatus("Камера или микрофон не найдены.");
+  }else{
+    setCallStatus("Не удалось включить устройства: "+error.message);
+  }
+}
+
+function stopLocalStream(){
+  if(localStream){
+    localStream.getTracks().forEach(track=>track.stop());
+    localStream=null;
+  }
+  localVideo.srcObject=null;
+}
+
+function endCall(){
+  if(activeCall){
+    activeCall.close();
+    activeCall=null;
+  }
+  if(incomingCall){
+    incomingCall.close();
+    incomingCall=null;
+  }
+  stopLocalStream();
+  remoteVideo.srcObject=null;
+  setCallStatus("Звонок завершён.");
+}
+
+function toggleMic(){
+  if(!localStream)return alert("Сначала подключитесь к звонку.");
+  const track=localStream.getAudioTracks()[0];
+  if(!track)return alert("Микрофон не подключён.");
+  track.enabled=!track.enabled;
+  alert(track.enabled?"Микрофон включён":"Микрофон выключен");
+}
+
+function toggleCamera(){
+  if(!localStream)return alert("Сначала подключитесь к звонку.");
+  const track=localStream.getVideoTracks()[0];
+  if(!track)return alert("Камера не подключена в аудиозвонке.");
+  track.enabled=!track.enabled;
+  alert(track.enabled?"Камера включена":"Камера выключена");
+}
+
+function copyId(){
+  if(!myPeerId)return alert("Сначала создайте комнату.");
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(myPeerId)
+      .then(()=>alert("ID скопирован"))
+      .catch(()=>prompt("Скопируйте ID:",myPeerId));
+  }else{
+    prompt("Скопируйте ID:",myPeerId);
+  }
+}
+
+window.addEventListener("beforeunload",()=>{
+  stopLocalStream();
+  if(peer)peer.destroy();
+});
+</script>
+
+</body>
+</html>
